@@ -1,3 +1,8 @@
+This just fixes Integer For Loops in HScript<br>
+Fix includes <https://github.com/HaxeFoundation/hscript/pull/115><br>
+Also is from the Github unstable branch, so that's cool
+
+----
 hscript
 =======
 
