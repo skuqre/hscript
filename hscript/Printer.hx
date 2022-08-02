@@ -114,6 +114,8 @@ class Printer {
 			return;
 		}
 		switch( #if hscriptPos e.e #else e #end ) {
+		case EImport(c):
+			add("import " + c);
 		case EConst(c):
 			switch( c ) {
 			case CInt(i): add(i);
@@ -340,6 +342,7 @@ class Printer {
 			case EInvalidIterator(v): "Invalid iterator: "+v;
 			case EInvalidOp(op): "Invalid operator: "+op;
 			case EInvalidAccess(f): "Invalid access to field " + f;
+			case EInvalidImport(s): "Invalid import: " + s;
 			case ECustom(msg): msg;
 		};
 		#if hscriptPos

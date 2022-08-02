@@ -2,6 +2,16 @@ This just fixes Integer For Loops in HScript<br>
 Fix includes <https://github.com/HaxeFoundation/hscript/pull/115><br>
 Also is from the Github unstable branch, so that's cool
 
+Since 8/2/22 -- Now with natural import, based off of [HScript Improved](https://github.com/YoshiCrafter29/hscript-improved) by [YoshiCrafter29](https://github.com/YoshiCrafter29).
+
+<!---
+Also supports `*` imports:
+```haxe
+import FunnyClassThing; // import class that has no package
+import ui.*; // import every class from package ui
+```
+-->
+
 ----
 hscript
 =======

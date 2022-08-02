@@ -43,6 +43,7 @@ enum ExprDef {
 typedef ExprDef = Expr;
 enum Expr {
 #end
+	EImport( c : String );
 	EConst( c : Const );
 	EIdent( v : String );
 	EVar( n : String, ?t : CType, ?e : Expr );
@@ -116,6 +117,7 @@ enum Error {
 	EInvalidIterator( v : String );
 	EInvalidOp( op : String );
 	EInvalidAccess( f : String );
+	EInvalidImport( s : String );
 	ECustom( msg : String );
 }
 

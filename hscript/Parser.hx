@@ -584,6 +584,33 @@ class Parser {
 		var p1 = tokenMin;
 		#end
 		return switch( id ) {
+		case "import":
+			var tk = token();
+			switch ( tk ) {
+				case TId(s):
+					var path = [s];
+					var t = null;
+
+					while ( true ) {
+						t = token();
+						if ( t != TDot ) {
+							push(t);
+							break;
+						}
+						t = token();
+						switch( t ) {
+							case TId(id):
+								path.push(id);
+							default:
+								unexpected(t);
+						}
+					}
+
+					var c = path.join(".");
+					mk(EImport(c), p1);
+				default:
+					unexpected(tk);
+			}
 		case "if":
 			ensure(TPOpen);
 			var cond = parseExpr();

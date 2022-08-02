@@ -24,6 +24,8 @@ import haxe.PosInfos;
 import hscript.Expr;
 import haxe.Constraints.IMap;
 
+using StringTools;
+
 private enum Stop {
 	SBreak;
 	SContinue;
@@ -34,10 +36,12 @@ class Interp {
 
 	#if haxe3
 	public var variables : Map<String,Dynamic>;
+	public var imports : Map<String,Dynamic>;
 	var locals : Map<String,{ r : Dynamic }>;
 	var binops : Map<String, Expr -> Expr -> Dynamic >;
 	#else
 	public var variables : Hash<Dynamic>;
+	public var imports : Hash<Dynamic>;
 	var locals : Hash<{ r : Dynamic }>;
 	var binops : Hash< Expr -> Expr -> Dynamic >;
 	#end
@@ -65,8 +69,10 @@ class Interp {
 	private function resetVariables(){
 		#if haxe3
 		variables = new Map<String,Dynamic>();
+		imports = new Map<String,Dynamic>();
 		#else
 		variables = new Hash();
+		imports = new Hash();
 		#end
 
 		variables.set("null",null);
@@ -323,6 +329,32 @@ class Interp {
 		var e = e.e;
 		#end
 		switch( e ) {
+		case EImport(c):
+			var splitByDots = [for (i in c.split(".")) i.trim()];
+			var isClass = Type.resolveClass(c.trim());
+			var isEnum = Type.resolveEnum(c.trim());
+
+			if (isClass == null && isEnum == null) {
+				error(EInvalidImport(c.trim()));
+			} else if (c.endsWith("*")) {
+				
+			} else {
+				if (isEnum != null) {
+					var newEnum = {};
+
+					for (con in isEnum.getConstructors()) {
+						Reflect.setField(newEnum, con, isEnum.createByName(con));
+					}
+
+					variables.set(splitByDots[splitByDots.length - 1], newEnum);
+					imports.set(splitByDots[splitByDots.length - 1], newEnum);
+				} else if (isClass != null) {
+					variables.set(splitByDots[splitByDots.length - 1], isClass);
+					imports.set(splitByDots[splitByDots.length - 1], isClass);
+				}
+			}
+
+			return null;
 		case EConst(c):
 			switch( c ) {
 			case CInt(v): return v;
